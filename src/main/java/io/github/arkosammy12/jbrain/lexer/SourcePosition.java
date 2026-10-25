@@ -1,6 +1,6 @@
 package io.github.arkosammy12.jbrain.lexer;
 
-public record SourcePosition(int column, int row) {
+public record SourcePosition(int row, int column) {
 
     public SourcePosition {
         if (this.column() < 0) {
