@@ -1,6 +1,7 @@
 package io.github.arkosammy12.jbrain;
 
 import io.github.arkosammy12.jbrain.interpreter.BrainfuckInterpreter;
+import io.github.arkosammy12.jbrain.interpreter.BrainfuckInterpreterException;
 import io.github.arkosammy12.jbrain.interpreter.CellSize;
 import io.github.arkosammy12.jbrain.interpreter.MemoryOverflowBehavior;
 import io.github.arkosammy12.jbrain.lexer.BrainfuckLexer;
@@ -10,10 +11,8 @@ import io.github.arkosammy12.jbrain.parser.BrainfuckParser;
 import io.github.arkosammy12.jbrain.parser.BrainfuckProgram;
 import picocli.CommandLine;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Queue;
 import java.util.concurrent.Callable;
@@ -36,7 +35,7 @@ public class JBrain implements Callable<Integer> {
     private CellSize cellSize = CellSize.BITS_8;
 
     @CommandLine.Option(
-            names = {"-h", "--hash-as-debug"},
+            names = {"-t", "--trace-wish-hash"},
             description = "Specify whether the '#' should be interpreted as a command to output debug information",
             defaultValue = "false",
             negatable = true
@@ -104,8 +103,12 @@ public class JBrain implements Callable<Integer> {
         switch (parser.parse(tokens)) {
             case BrainfuckParseResult.Error error -> System.err.println("Failed to compile provided Brainfuck program!\n(%d:%d) %s".formatted(error.sourcePosition().row() + 1, error.sourcePosition().column() + 1, error.message()));
             case BrainfuckParseResult.Ok(BrainfuckProgram brainfuckProgram) -> {
-                BrainfuckInterpreter interpreter = new BrainfuckInterpreter(30_000);
-                interpreter.interpret(brainfuckProgram);
+                BrainfuckInterpreter interpreter = new BrainfuckInterpreter(this.cellSize, this.dynamicMemory, this.memoryOverflowBehavior, this.memorySize);
+                try {
+                    interpreter.interpret(brainfuckProgram);
+                } catch (BrainfuckInterpreterException e) {
+                    System.err.println("Error executing Brainfuck program!\n%s%s".formatted(e.getSourcePosition().map(sourcePosition -> "(%d:%d) ".formatted(sourcePosition.row() + 1, sourcePosition.column() + 1)).orElse(""), e.getMessage()));
+                }
             }
         }
 
