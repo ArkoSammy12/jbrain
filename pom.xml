@@ -6,7 +6,7 @@
 
     <groupId>io.github.arkosammy12</groupId>
     <artifactId>jbrain</artifactId>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>

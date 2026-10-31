@@ -37,8 +37,7 @@ public class JBrain implements Callable<Integer> {
     @CommandLine.Option(
             names = {"-t", "--trace-wish-hash"},
             description = "Specify whether the '#' should be interpreted as a command to output debug information",
-            defaultValue = "false",
-            negatable = true
+            defaultValue = "false"
     )
     private boolean hashAsDebug;
 
@@ -46,8 +45,7 @@ public class JBrain implements Callable<Integer> {
             names = {"-d", "--dynamic-memory"},
             description = "Specify whether to use dynamic or an infinite memory tape instead",
             defaultValue = "false",
-            showDefaultValue = CommandLine.Help.Visibility.ON_DEMAND,
-            negatable = true
+            showDefaultValue = CommandLine.Help.Visibility.ON_DEMAND
     )
     private boolean dynamicMemory;
 
